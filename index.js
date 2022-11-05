@@ -13,10 +13,10 @@ let connection = mysql.createConnection({
 
 
 
-app.use('/',(req,res)=>{
+app.get('/',(req,res)=>{
     res.send('success')
 })
-app.use('/api',(req,res)=>{
+app.get('/api',(req,res)=>{
     connection.connect(function(err){
         if(err){
             return console.error('error: ' + err.message);
