@@ -3,83 +3,66 @@ const app = express()
 import mysql from 'mysql'
 
 const port = 3001
-let connection = mysql.createConnection({
-    host: 'company.cw7hhrixt5qj.ap-southeast-1.rds.amazonaws.com',
+var connection = mysql.createConnection({
+    host: 'jura-coffee-1.cw7hhrixt5qj.ap-southeast-1.rds.amazonaws.com',
     user: 'admin',
     password: '12345678',
+    port: '3306',
     database: 'company'
+});
+
+connection.connect(function (err) {
+    if (err) {
+        console.error('Database connection failed: ' + err.stack);
+        return;
+    }
+
+    console.log('Connected to database.');
+});
+app.get('/create-database',(req,res)=>{
+    connection.query('create database inventory',(err,result)=>{
+        if(err)res.send(err)
+        res.send(result)
+    })
 })
-
-
-
-
-app.get('/',(req,res)=>{
+app.get('/use-database',(req,res)=>{
+    connection.query('use inventory',(err,result)=>{
+        if(err)res.send(err)
+        res.send(result)
+    })
+})
+// connection.end();
+app.get('/', (req, res) => {
     res.send('success')
 })
-app.get('/create-table',(req,res)=>{
-    connection.connect(function(err){
-        if(err){
-            return console.error('error: ' + err.message);
+
+app.get('/create-table', (req, res) => {
+    connection.query('create table user3 (name varchar(20),age int)', function(err,result) {
+        if(err) {
+            res.send(err)
         }
-        // let createTable  = `create table admin (name varchar(20),age int)`;
-        let showUserTable = `create table users (name varchar(20),age int)`;
-        connection.query(showUserTable,function(err,results){
-            if(err){
-                console.log({err})
-            }else{
-                res.send({results,'state':'success'})
-            }
-        })
-        connection.end(function(err){
-            if(err){
-                return console.log(err)
-            }
-        })
-    })
+        else{
+            res.send(result)
+        }
+    });
     // res.send()
 })
-app.get('/insert-table',(req,res)=>{
-    connection.connect(function(err){
-        if(err){
-            return console.error('error: ' + err.message);
+app.get('/insert-table', (req, res) => {
+    connection.query("insert into user3 values ('cuong',12)", function(err,result) {
+        if(err) throw err
+        else{
+            res.send(result)
         }
-        // let createTable  = `create table admin (name varchar(20),age int)`;
-        let showUserTable = `insert into users values('cuong',12))`;
-        connection.query(showUserTable,function(err,results){
-            if(err){
-                console.log({err})
-            }else{
-                res.send({results,'state':'success'})
-            }
-        })
-        connection.end(function(err){
-            if(err){
-                return console.log(err)
-            }
-        })
-    })
+    });
     // res.send()
 })
-app.get('/get-table',(req,res)=>{
-    connection.connect(function(err){
-        if(err){
-            return console.error('error: ' + err.message);
+app.get('/get', (req, res) => {
+    connection.query("select * from user3", function(err,result) {
+        if(err) throw err
+        else{
+            res.send(result)
         }
-        // let createTable  = `create table admin (name varchar(20),age int)`;
-        let showUserTable = `select * from users`;
-        connection.query(showUserTable,function(err,results){
-            if(err){
-                console.log({err})
-            }else{
-                res.send(results)
-            }
-        })
-        connection.end(function(err){
-            if(err){
-                return console.log(err)
-            }
-        })
-    })
+    });
     // res.send()
 })
 
