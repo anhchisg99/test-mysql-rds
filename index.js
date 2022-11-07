@@ -1,14 +1,18 @@
 import express from 'express'
 const app = express()
 import mysql from 'mysql'
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 const port = 3001
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+app.use(express.static('public'))
 var connection = mysql.createConnection({
-    host: 'jura-coffee-1.cw7hhrixt5qj.ap-southeast-1.rds.amazonaws.com',
+    host: 'tim-cook.cw7hhrixt5qj.ap-southeast-1.rds.amazonaws.com',
     user: 'admin',
     password: '12345678',
     port: '3306',
-    database: 'company'
 });
 
 connection.connect(function (err) {
@@ -20,13 +24,13 @@ connection.connect(function (err) {
     console.log('Connected to database.');
 });
 app.get('/create-database',(req,res)=>{
-    connection.query('create database inventory',(err,result)=>{
+    connection.query('create database inventory1',(err,result)=>{
         if(err)res.send(err)
         res.send(result)
     })
 })
 app.get('/use-database',(req,res)=>{
-    connection.query('use inventory',(err,result)=>{
+    connection.query('use inventory1',(err,result)=>{
         if(err)res.send(err)
         res.send(result)
     })
