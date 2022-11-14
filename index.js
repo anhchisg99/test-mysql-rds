@@ -4,7 +4,7 @@ import mysql from 'mysql'
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
-const port = 3001
+const port = 8080
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 app.use(express.static('public'))
@@ -24,13 +24,13 @@ connection.connect(function (err) {
     console.log('Connected to database.');
 });
 app.get('/create-database',(req,res)=>{
-    connection.query('create database inventory1',(err,result)=>{
+    connection.query('create database inventory',(err,result)=>{
         if(err)res.send(err)
         res.send(result)
     })
 })
 app.get('/use-database',(req,res)=>{
-    connection.query('use inventory1',(err,result)=>{
+    connection.query('use inventory',(err,result)=>{
         if(err)res.send(err)
         res.send(result)
     })
@@ -41,7 +41,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/create-table', (req, res) => {
-    connection.query('create table user3 (name varchar(20),age int)', function(err,result) {
+    connection.query('create table user (name varchar(20),age int)', function(err,result) {
         if(err) {
             res.send(err)
         }
@@ -52,7 +52,7 @@ app.get('/create-table', (req, res) => {
     // res.send()
 })
 app.get('/insert-table', (req, res) => {
-    connection.query("insert into user3 values ('cuong',12)", function(err,result) {
+    connection.query("insert into user values ('cuong',12)", function(err,result) {
         if(err) throw err
         else{
             res.send(result)
@@ -61,7 +61,7 @@ app.get('/insert-table', (req, res) => {
     // res.send()
 })
 app.get('/get', (req, res) => {
-    connection.query("select * from user3", function(err,result) {
+    connection.query("select * from user", function(err,result) {
         if(err) throw err
         else{
             res.send(result)
